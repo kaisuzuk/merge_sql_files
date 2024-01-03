@@ -19,7 +19,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let merged = match file_ops::merge_files(args.directory.as_str()) {
+    let merged = match file_ops::merge_sql_files(args.directory.as_str()) {
         Ok(content) => content,
         Err(e) => {
             eprintln!("Error merging files: {}", e);

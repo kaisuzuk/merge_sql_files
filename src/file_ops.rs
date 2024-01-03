@@ -4,7 +4,7 @@ use std::io::Read;
 use std::{error::Error, fs, path::PathBuf};
 
 // 指定のディレクトリ直下のSQLファイルをマージする関数
-pub fn merge_files(dir: &str) -> Result<String, Box<dyn Error>> {
+pub fn merge_sql_files(dir: &str) -> Result<String, Box<dyn Error>> {
     let mut merged = Local::now().format("--[%Y-%m-%d %H:%M:%S]\n").to_string();
     let files = get_files(dir)?;
     for path in files {
@@ -83,7 +83,7 @@ mod tests {
     use std::io::Write;
 
     #[test]
-    fn test_merge_files() {
+    fn test_merge_sql_files() {
         // テスト用のディレクトリとファイルを作成
         fs::create_dir_all("./test_sql").unwrap();
         let mut file2 = File::create("./test_sql/2.sql").unwrap();
@@ -92,7 +92,7 @@ mod tests {
         file1.write_all(b"SELECT * FROM table1;").unwrap();
 
         // ファイルをマージ
-        let merged = merge_files("./test_sql").unwrap();
+        let merged = merge_sql_files("./test_sql").unwrap();
 
         // マージされた内容を確認
         assert_eq!(merged, "SELECT * FROM table1;\nSELECT * FROM table2;\n");
