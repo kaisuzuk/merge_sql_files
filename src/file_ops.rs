@@ -1,11 +1,14 @@
-use chrono::Local;
+use chrono::{DateTime, Local};
 use std::fs::File;
 use std::io::Read;
 use std::{error::Error, fs, path::PathBuf};
 
 // 指定のディレクトリ直下のSQLファイルをマージする関数
-pub fn merge_sql_files(dir: &str) -> Result<String, Box<dyn Error>> {
-    let mut merged = Local::now().format("--[%Y-%m-%d %H:%M:%S]\n").to_string();
+pub fn merge_sql_files(
+    dir: &str,
+    get_time: impl Fn() -> DateTime<Local>,
+) -> Result<String, Box<dyn Error>> {
+    let mut merged = get_current_time(get_time);
     let files = get_files(dir)?;
     for path in files {
         if is_sql_file(&path) {
@@ -76,8 +79,15 @@ fn is_utf8_file(path: &PathBuf) -> bool {
     }
 }
 
+// 現在時刻を取得する関数
+fn get_current_time(get_time: impl Fn() -> DateTime<Local>) -> String {
+    get_time().format("-- [%Y-%m-%d %H:%M:%S]\n").to_string()
+}
+
 #[cfg(test)]
 mod tests {
+    use chrono::TimeZone;
+
     use super::*;
     use std::fs::File;
     use std::io::Write;
@@ -91,11 +101,16 @@ mod tests {
         let mut file1 = File::create("./test_sql/1.sql").unwrap();
         file1.write_all(b"SELECT * FROM table1;").unwrap();
 
+        let mock_time = || Local.with_ymd_and_hms(2020, 1, 1, 0, 0, 0).unwrap();
+
         // ファイルをマージ
-        let merged = merge_sql_files("./test_sql").unwrap();
+        let merged = merge_sql_files("./test_sql", mock_time).unwrap();
 
         // マージされた内容を確認
-        assert_eq!(merged, "SELECT * FROM table1;\nSELECT * FROM table2;\n");
+        assert_eq!(
+            merged,
+            "-- [2020-01-01 00:00:00]\n\nSELECT * FROM table1;\nSELECT * FROM table2;"
+        );
 
         // テスト用のディレクトリとファイルを削除
         fs::remove_dir_all("./test_sql").unwrap();

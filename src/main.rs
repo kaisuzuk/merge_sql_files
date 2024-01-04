@@ -1,6 +1,7 @@
 mod file_ops;
 
-use clap::Parser;
+use chrono::Local;
+pub(crate) use clap::Parser;
 use std::{fs::File, io::Write};
 
 #[derive(Debug, Parser)]
@@ -19,7 +20,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let merged = match file_ops::merge_sql_files(args.directory.as_str()) {
+    let merged = match file_ops::merge_sql_files(args.directory.as_str(), Local::now) {
         Ok(content) => content,
         Err(e) => {
             eprintln!("Error merging files: {}", e);
