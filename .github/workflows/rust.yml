@@ -8,6 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  MODULE_VERSION: v1.0.${{ github.run_number }}
 
 jobs:
   build:
@@ -47,8 +48,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}.0
+        tag_name: ${{ env.MODULE_VERSION }}
+        release_name: Release ${{ env.MODULE_VERSION }}}
         draft: false
         prerelease: false
     - name: Upload Release Asset
