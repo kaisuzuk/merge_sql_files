@@ -58,6 +58,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./target/release/your_binary
-        asset_name: your_binary
+        asset_path: ./target/release/merge_sql_files
+        asset_name: merge_sql_files
         asset_content_type: application/octet-stream
