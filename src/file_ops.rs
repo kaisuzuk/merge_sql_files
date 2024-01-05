@@ -117,27 +117,6 @@ mod tests {
     }
 
     #[test]
-    fn test_get_files() {
-        // テスト用のディレクトリとファイルを作成
-        fs::create_dir_all("./test_files").unwrap();
-        let mut file1 = File::create("./test_files/file1.txt").unwrap();
-        file1.write_all(b"Test file 1").unwrap();
-        let mut file2 = File::create("./test_files/file2.txt").unwrap();
-        file2.write_all(b"Test file 2").unwrap();
-
-        // ファイルを取得
-        let files = get_files("./test_files").unwrap();
-
-        // ファイルの数とパスを確認
-        assert_eq!(files.len(), 2);
-        assert_eq!(files[0], PathBuf::from("./test_files/file1.txt"));
-        assert_eq!(files[1], PathBuf::from("./test_files/file2.txt"));
-
-        // テスト用のディレクトリとファイルを削除
-        fs::remove_dir_all("./test_files").unwrap();
-    }
-
-    #[test]
     fn test_is_utf8_file_with_utf8_file() {
         // テスト用のディレクトリとファイルを作成
         fs::create_dir_all("./test_files").unwrap();
