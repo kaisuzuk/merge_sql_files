@@ -21,7 +21,6 @@ jobs:
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
-        override: true
     - name: Build
       run: cargo build --verbose
     - name: Run tests
@@ -39,7 +38,6 @@ jobs:
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
-        override: true
     - name: Build Release
       run: cargo build --release
     - name: Create Release
